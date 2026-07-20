@@ -1,0 +1,62 @@
+name: GambleGate
+version: '1.0.0'
+main: jp.wsn0672.gamblegate.GambleGatePlugin
+api-version: '1.21.11'
+authors: [wsn0672]
+description: WorldEdit regions, Vault economy, venue passes, and casino games for Paper.
+depend: [Vault, WorldEdit, GSit]
+commands:
+  gamblevenue:
+    description: ギャンブル会場を管理します
+    usage: /gamblevenue help
+    aliases: [gvenue]
+    permission: gamblegate.admin
+  slot:
+    description: カジノのスロット台を管理します
+    usage: /slot help
+    permission: gamblegate.slotadmin
+  casinoaccount:
+    description: カジノ全体・プレイヤー別の受取額と支払額を確認します
+    usage: /casinoaccount total [会場ID]
+    aliases: [caccount]
+    permission: gamblegate.accountadmin
+  highlow:
+    description: ハイ＆ロー台を管理します
+    usage: /highlow help
+    permission: gamblegate.highlowadmin
+  crash:
+    description: クラッシュ台を管理します
+    usage: /crash help
+    permission: gamblegate.crashadmin
+  roulette:
+    description: 物理ルーレット台を管理します
+    usage: /roulette help
+    permission: gamblegate.rouletteadmin
+permissions:
+  gamblegate.admin:
+    description: ギャンブル会場を設定できます
+    default: op
+  gamblegate.bypass:
+    description: 入場チェックを無視できます
+    default: op
+  gamblegate.passadmin:
+    description: プレイヤーのパスを破棄・期限切れにできます
+    default: op
+  gamblegate.slotadmin:
+    description: スロット台を設定できます
+    default: op
+  gamblegate.accountadmin:
+    description: カジノ全体・プレイヤー別の収支統計を確認・リセットできます
+    default: op
+  gamblegate.highlowadmin:
+    description: ハイ＆ロー台を設定できます
+    default: op
+  gamblegate.crashadmin:
+    description: クラッシュ台を設定できます
+    default: op
+  gamblegate.rouletteadmin:
+    description: 物理ルーレット台を設定できます
+    default: op
+  gamblegate.vip:
+    description: すべての会場のVIP専用エリアへ入れます
+    default: op

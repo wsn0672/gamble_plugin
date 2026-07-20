@@ -1,0 +1,435 @@
+# ゲートを再検出するまでの最短時間（ミリ秒）
+gate-cooldown-ms: 1000
+
+# sounds以下の全効果音へ掛ける共通音量倍率
+sound-volume-multiplier: 1.4
+
+# カジノへ正規入場している本人へ常時再生する音符ブロックBGM
+casino-bgm:
+  enabled: true
+  volume: 0.65
+  # BGM設定ボタンで「小さめ」を選んだプレイヤーへ掛ける音量倍率
+  quiet-volume-multiplier: 0.35
+  max-notes-per-tick: 12
+
+# 会場ごとに登録した屋根上の地点から打ち上げる装飾花火
+roof-fireworks:
+  enabled: true
+  # プレイヤーの純利益（払戻し - 賭け金）がこの金額増えるごとに祝砲が1発増えます。
+  # 祝砲数は必ず1〜10発です。標準では利益1万円まで1発、10万円以上で10発になります。
+  profit-per-shot: 10000
+  # 祝砲同士のランダムな発射間隔。20 ticks = 1秒
+  min-shot-interval-ticks: 4
+  max-shot-interval-ticks: 12
+  # 3はバニラ花火でかなり高く上がる設定です。
+  flight-power: 3
+  # 1ロケットに重ねるバニラ大玉の数。多いほど密度の高い特大玉になります。
+  explosions-per-firework: 4
+  # 1発ごとに単色〜同系色のみを使用します。最大3色まで。
+  colors-per-firework: 3
+  trail: true
+  flicker: true
+  # summon後の飛行中だけ速度を滑らかに変え、ランダムな曲線軌道にします。
+  curve:
+    enabled: true
+    min-strength: 0.14
+    max-strength: 0.42
+    smoothing: 0.32
+    vertical-speed: 0.68
+    min-turn-ticks: 3
+    max-turn-ticks: 9
+
+# 会場リージョンの外側を退出扱いにしない猶予ブロック数
+exit-grace-blocks: 1
+
+# 会場リージョンからこの半径内では敵対モブ（エンダーマンを含む）を禁止します。
+hostile-mob-protection-radius: 20
+
+# VIP専用エリアと自動開閉する鉄の扉
+vip:
+  # 登録した鉄の扉が開く水平距離（ブロック）
+  door-open-distance: 1.0
+
+# 新しい会場を作成した際のパス既定価格。各会場の値は venues 以下に保存されます。
+pass-defaults:
+  one-time-price: 5000
+  subscription-price: 4500
+  trial-price: 500
+
+# 登録済みパス自販機ボタンの装飾パーティクル
+pass-machine-effects:
+  enabled: true
+  interval-ticks: 20
+  view-distance: 24
+
+# 会場へ正規入場している間だけ表示するサイドバースコアボード
+casino-scoreboard:
+  enabled: true
+  update-ticks: 20
+  # スロット結果を表示し続ける時間
+  result-display-ticks: 100
+
+# 会場全体・プレイヤー別の受取額、支払額、日別収支を casino-accounts.json に保存します。
+# この統計額によって営業停止することはありません。
+casino-account:
+  history-retention-days: 365
+
+slot-machine:
+  default-bet: 100
+  # 登録した椅子から、この半径内で最も近い棚とレバーを自動連携します。
+  auto-link-radius: 3.0
+  # 自動連携の検出結果を保持する時間。設置・破壊時は待たずに再検出します。
+  auto-link-cache-ticks: 100
+  # レバーを引いた見た目だけを表示する時間と表示距離。実際のレッドストーン信号は発生しません。
+  lever-animation-ticks: 4
+  lever-animation-view-distance: 32
+  ready-symbol: IRON_INGOT
+  proximity-distance: 10
+  idle-cycle-ticks: 20
+  spin-update-ticks: 2
+  stop-steps: [20, 30, 40]
+  max-payout: 100000000
+  # 経済プラグインに拒否された払戻しを再試行する間隔。20 ticks = 1秒。
+  pending-payout-retry-ticks: 200
+  effects:
+    # 回転中のパーティクルを出す回転ステップ間隔。大きいほど控えめになります。
+    spin-particle-interval-steps: 5
+    # 少し大きめの回転演出を出す間隔。
+    spin-large-particle-interval-steps: 15
+    # Gold Rush突入・連鎖時にビーコン音を重ねる回数と間隔。
+    gold-rush-beacon-repeats: 5
+    gold-rush-beacon-interval-ticks: 4
+  # 通常スピンは先に結果種別を抽選します。合計値は任意で、比率として扱われます。
+  normal-outcomes:
+    LOSS: 25
+    TWO_MATCH: 50
+    TRIPLE_COPPER: 5
+    TRIPLE_IRON: 10
+    TRIPLE_EMERALD: 5
+    TRIPLE_DIAMOND: 4
+    TRIPLE_GOLD: 1
+  # Gold Rush連鎖とmax-payoutを含め、通常抽選の確率をこの期待払戻し倍率へ自動正規化します。
+  rtp: 1.0
+  # 上記の基準確率を、カジノ収支統計の累計受取額・支払額に応じて自動補正します。
+  # カジノが黒字なら当たり寄り、赤字ならハズレ寄りになります。
+  dynamic-odds:
+    enabled: true
+    # 収支データが少ない間に確率が急変しないための最低取引総額。
+    minimum-turnover: 100000
+    # 黒字率・赤字率がこの値に達したとき、下記の最大補正を適用します。
+    full-adjustment-profit-margin: 0.20
+    # 実収支に応じて基準RTPを最大±2%だけ補正します。
+    maximum-rtp-adjustment: 0.02
+  # 回転途中の見た目と、2つ揃いの材質抽選に使用します。
+  normal-weights:
+    COPPER_INGOT: 35
+    IRON_INGOT: 25
+    EMERALD: 18
+    DIAMOND: 12
+    GOLD_INGOT: 10
+  gold-rush:
+    triple-gold-chance: 0.5
+    fallback-weights:
+      COPPER_INGOT: 30
+      IRON_INGOT: 25
+      EMERALD: 20
+      DIAMOND: 15
+      GOLD_INGOT: 10
+  payouts:
+    two-match: 0.3
+    IRON_INGOT: 2.0
+    EMERALD: 3.0
+    DIAMOND: 5.0
+
+high-low:
+  # 中央ボタンを押した際のGUIへ表示する賭け金（先頭3件を使用）
+  bets: [100, 1000, 10000]
+  auto-link-radius: 3.0
+  # 待機表示を生成・維持するプレイヤー検出距離
+  proximity-distance: 30
+  # 同値の引き分け再抽選と途中換金を含む基準期待払戻し倍率。
+  rtp: 1.0
+  dynamic-odds:
+    enabled: true
+    minimum-turnover: 100000
+    full-adjustment-profit-margin: 0.20
+    maximum-rtp-adjustment: 0.02
+  max-payout: 100000000
+  reveal-ticks: 16
+  result-display-ticks: 30
+  # 中央ボタンから椅子と反対へ1ブロック進んだ位置に表示します。
+  # 同形式のゲームで使用する標準表示位置: 高さ0.22、傾き-10度
+  card-display-y-offset: 0.22
+  card-display-scale: 1.5
+  guide-display-scale: 0.8
+  idle-display-scale: 1.0
+  idle-display-cycle-ticks: 60
+  # PaperのDisplay表示範囲倍率。2.0で30ブロック先でも十分見える範囲にします。
+  display-view-range: 2.0
+  # プレイヤー側を向くカードの傾き。負数で奥側へ倒します。
+  card-display-pitch: -10
+  pending-payout-retry-ticks: 200
+
+# クラッシュ: 倍率がクラッシュする前に、開始・換金兼用ボタンで賞金を受け取るゲーム
+crash:
+  # GUIへ表示する賭け金（先頭3件を使用）
+  bets: [100, 1000, 10000]
+  # 椅子と同じXまたはZ軸上にある、最も近いボタンを自動連携します。
+  auto-link-radius: 4.0
+  # 待機表示を生成・維持するプレイヤー検出距離
+  proximity-distance: 30
+  update-ticks: 2
+  # 1更新あたりの倍率増加量。約0.333で従来の約3倍ゆっくり上昇します。
+  # 小数の進行量を内部で蓄積するため、表示は滑らかな0.01倍刻みのままです。
+  growth-centi-per-update: 0.3333333333
+  # 1.20倍から赤い超危険段階までの速度。序盤のちょうど2倍です。
+  cashout-growth-centi-per-update: 0.6666666667
+  # 赤い「超危険」段階へ入った後の速度。1.0で以前の上昇速度に戻ります。
+  extreme-growth-centi-per-update: 1.0
+  # 高倍率になるほど上昇を少し加速します。
+  growth-acceleration: 0.35
+  # 108 = 1.08倍。この倍率までは絶対にクラッシュしません。
+  safe-until-centi: 108
+  # 120 = 1.20倍。ここで換金が解禁されます。
+  # 基準RTP 1.0の場合、ここへ到達できる確率は約83.3%です。
+  minimum-cashout-centi: 120
+  # この倍率から表示・音・パーティクルを最も激しい段階にします。
+  extreme-from-centi: 200
+  # 10000 = 100.00倍。到達時は強制換金します。
+  maximum-multiplier-centi: 10000
+  max-payout: 100000000
+  # 長期的な基準還元率。1.20倍即換金を繰り返しても期待値はこの値になります。
+  rtp: 1.0
+  dynamic-odds:
+    enabled: true
+    minimum-turnover: 100000
+    full-adjustment-profit-margin: 0.20
+    # カジノが黒字ならRTPを上げ、赤字なら下げる最大補正幅。
+    maximum-rtp-adjustment: 0.02
+  result-display-ticks: 40
+  pending-payout-retry-ticks: 200
+  # 表示はボタンから椅子と反対方向へ1ブロック進んだ位置へ出します。
+  # 同形式のゲームで使用する標準表示位置: 高さ0.22、傾き-10度
+  display-y-offset: 0.22
+  display-scale: 1.25
+  guide-display-scale: 0.9
+  idle-display-scale: 1.0
+  idle-display-cycle-ticks: 60
+  # PaperのDisplay表示範囲倍率。2.0で30ブロック先でも十分見える範囲にします。
+  display-view-range: 2.0
+  display-pitch: -10
+  # ゲーム中のパーティクルをホログラム中央から左右へ離す距離
+  particle-side-offset: 1.0
+
+# 16マスの物理ルーレット
+roulette:
+  bets: [1000, 10000, 50000]
+  # 全賭け方の基準還元率。配当を上げても当選率を調整してこの値を維持します。
+  # 動的補正前の期待払戻し倍率。1.0なら賭け金と同額が長期平均です。
+  rtp: 1.0
+  payouts:
+    half: 2.0
+    quarter: 4.0
+    exact: 16.0
+  max-payout: 100000000
+  dynamic-odds:
+    enabled: true
+    minimum-turnover: 100000
+    full-adjustment-profit-margin: 0.30
+    # 実収支に応じて基準RTPを最大±2%だけ補正します。
+    maximum-rtp-adjustment: 0.02
+  # 20 ticks = 1秒
+  min-spin-ticks: 140
+  max-spin-ticks: 200
+  min-laps: 5
+  max-laps: 8
+  result-display-ticks: 60
+  # 順番が来てからGUIを操作しないプレイヤーを受付へ戻すまでの時間。1200 ticks = 1分
+  selection-timeout-ticks: 1200
+  pending-payout-retry-ticks: 200
+  ball-scale: 0.65
+  # 登録した金ブロック上面からの玉の高さ
+  ball-height: 1.12
+  stop-height-offset: 0.0
+  ball-hop-height: 0.08
+  particle-interval-ticks: 3
+  # 数字と開始案内のTextDisplay。seeThrough=falseのため壁越しには表示されません。
+  display-view-range: 0.65
+  number-display-y-offset: 1.48
+  number-display-scale: 0.72
+  start-display-y-offset: 1.15
+  start-display-scale: 0.9
+  # /roulette setdisplayで登録する、観戦者向け賭け情報TextDisplay
+  wager-display-view-range: 0.65
+  wager-display-scale: 1.0
+
+# 効果音名は Minecraft の namespaced key で指定します。
+sounds:
+  gui-open:
+    name: "minecraft:block.chest.open"
+    volume: 0.8
+    pitch: 1.1
+  entry-success:
+    name: "minecraft:entity.player.levelup"
+    volume: 1.0
+    pitch: 1.2
+  exit-success:
+    name: "minecraft:entity.enderman.teleport"
+    volume: 0.8
+    pitch: 1.0
+  security-warning:
+    name: "minecraft:block.note_block.bass"
+    volume: 1.0
+    pitch: 0.6
+  error:
+    name: "minecraft:entity.villager.no"
+    volume: 0.8
+    pitch: 1.0
+  slot-ready:
+    name: "minecraft:block.note_block.chime"
+    volume: 0.8
+    pitch: 1.2
+  slot-start:
+    name: "minecraft:block.note_block.bell"
+    volume: 1.0
+    pitch: 0.8
+  slot-tick:
+    name: "minecraft:block.note_block.hat"
+    volume: 0.7
+    pitch: 1.5
+  slot-stop:
+    name: "minecraft:block.note_block.pling"
+    volume: 0.9
+    pitch: 1.1
+  slot-win:
+    name: "minecraft:entity.player.levelup"
+    volume: 1.0
+    pitch: 1.3
+  slot-payout:
+    name: "minecraft:entity.experience_orb.pickup"
+    volume: 1.2
+    pitch: 1.0
+  slot-exp:
+    name: "minecraft:entity.experience_orb.pickup"
+    volume: 1.0
+    pitch: 1.25
+  slot-levelup:
+    name: "minecraft:entity.player.levelup"
+    volume: 1.0
+    pitch: 1.15
+  slot-challenge:
+    name: "minecraft:ui.toast.challenge_complete"
+    volume: 1.1
+    pitch: 1.0
+  slot-fail:
+    name: "minecraft:entity.villager.no"
+    volume: 0.9
+    pitch: 0.7
+  slot-copper:
+    name: "minecraft:block.copper.break"
+    volume: 1.0
+    pitch: 0.8
+  slot-lose:
+    name: "minecraft:block.note_block.bass"
+    volume: 1.0
+    pitch: 0.6
+  gold-rush-progress:
+    name: "minecraft:block.beacon.activate"
+    volume: 1.2
+    pitch: 1.0
+  highlow-start:
+    name: "minecraft:block.note_block.bell"
+    volume: 1.0
+    pitch: 1.1
+  highlow-ready:
+    name: "minecraft:block.note_block.chime"
+    volume: 1.0
+    pitch: 1.25
+  highlow-reveal:
+    name: "minecraft:item.book.page_turn"
+    volume: 1.0
+    pitch: 1.2
+  highlow-win:
+    name: "minecraft:entity.player.levelup"
+    volume: 1.0
+    pitch: 1.3
+  highlow-lose:
+    name: "minecraft:entity.villager.no"
+    volume: 1.0
+    pitch: 0.7
+  highlow-draw:
+    name: "minecraft:block.note_block.hat"
+    volume: 0.8
+    pitch: 1.0
+  highlow-cashout:
+    name: "minecraft:entity.experience_orb.pickup"
+    volume: 1.2
+    pitch: 1.1
+  crash-ready:
+    name: "minecraft:block.note_block.chime"
+    volume: 1.0
+    pitch: 1.25
+  crash-start:
+    name: "minecraft:block.beacon.activate"
+    volume: 1.1
+    pitch: 1.3
+  crash-tick:
+    name: "minecraft:block.note_block.hat"
+    volume: 0.75
+    pitch: 1.25
+  crash-warning:
+    name: "minecraft:block.note_block.bass"
+    volume: 1.0
+    pitch: 0.8
+  crash-warning-tick:
+    name: "minecraft:block.note_block.hat"
+    volume: 0.9
+    pitch: 1.6
+  crash-unlocked:
+    name: "minecraft:block.beacon.activate"
+    volume: 1.2
+    pitch: 1.25
+  crash-danger-tick:
+    name: "minecraft:block.note_block.pling"
+    volume: 1.0
+    pitch: 1.5
+  crash-extreme-tick:
+    name: "minecraft:block.note_block.bell"
+    volume: 1.15
+    pitch: 1.8
+  crash-cashout:
+    name: "minecraft:ui.toast.challenge_complete"
+    volume: 1.2
+    pitch: 1.1
+  crash-bust:
+    name: "minecraft:entity.generic.explode"
+    volume: 1.2
+    pitch: 0.75
+  roulette-select:
+    name: "minecraft:ui.button.click"
+    volume: 0.8
+    pitch: 1.25
+  roulette-start:
+    name: "minecraft:block.beacon.activate"
+    volume: 1.1
+    pitch: 1.25
+  roulette-tick:
+    name: "minecraft:block.note_block.hat"
+    volume: 0.7
+    pitch: 1.45
+  roulette-win:
+    name: "minecraft:entity.player.levelup"
+    volume: 1.2
+    pitch: 1.2
+  roulette-jackpot:
+    name: "minecraft:ui.toast.challenge_complete"
+    volume: 1.3
+    pitch: 1.0
+  roulette-lose:
+    name: "minecraft:entity.villager.no"
+    volume: 1.0
+    pitch: 0.7
+
+# 会場・リージョン・ゲート・入場料は管理コマンドからここへ保存されます。
+# 手動編集後は /gamblevenue reload を実行してください。
+venues: {}
